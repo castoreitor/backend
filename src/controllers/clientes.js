@@ -1,49 +1,53 @@
-const db = require("../model/db.js");
+const connection = require("../model/db.js");
+
+const clientes = require("../model/db.js");
 
 const clienteController = {
-  // 🔹 Login de cliente
-  login: async (req, res) => {
+  login: (req, res) => {
     const { Correo_electronico, contraseña } = req.body;
 
-    try {
-      const [rows] = await db.query(
-        "SELECT COUNT(*) AS sum FROM cliente WHERE Correo_electronico = ? AND contraseña = ?",
-        [Correo_electronico, contraseña]
-      );
-
-      if (rows[0].sum === 0) {
-        return res.status(400).json({ Error: "No existe" });
-      }
-      res.status(200).json({ Exito: "Existe" });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ Error: "Error en el servidor" });
-    }
-  },
-
-  // 🔹 Login con nivel de acceso
-  loginnivel: async (req, res) => {
-    const { Correo_electronico, contraseña } = req.body;
-
-    try {
-      const [rows] = await db.query(
-        "SELECT Correo_electronico FROM cliente WHERE Correo_electronico = ? AND contraseña = ?",
-        [Correo_electronico, contraseña]
-      );
-
-      if (rows.length > 0) {
-        res.status(200).json(rows);
+    const query =
+      "SELECT COUNT(*) sum FROM cliente WHERE Correo_electronico = ? and contraseña = ?";
+    clientes.query(query, [Correo_electronico, contraseña], (err, rows) => {
+      if (err) {
+        console.log(err);
       } else {
-        res.status(400).json({ "ERROR DATOS": "El usuario no existe" });
+        console.log(JSON.stringify(rows));
+        const count = JSON.parse(JSON.stringify(rows))[0]["sum"];
+
+        if (count == 0) {
+          res.status(400).json({ Error: "No existe" });
+          console.log(query);
+        } else {
+          res.status(200).json({ Exito: "Existe" });
+          console.log(query);
+        }
       }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ Error: "Error en el servidor" });
-    }
+    });
   },
 
-  // 🔹 Crear un nuevo cliente
-  createCliente: async (req, res) => {
+  loginnivel: (req, res) => {
+    const { Correo_electronico, contraseña } = req.body;
+    //let documento
+    //let nivel
+
+    const query =
+      "SELECT Correo_electronico FROM cliente WHERE email = ? and contraseña = ?";
+
+    database.query(query, [Correo_electronico, contraseña], (err, rows) => {
+      if (err) {
+        console.log(err);
+      } else {
+        if (rows.length > 0) {
+          res.status(200).json(rows);
+        } else {
+          res.status(400).json({ "ERROR DATOS": "El usuario no existe" });
+        }
+      }
+    });
+  },
+
+  createCliente: (req, res) => {
     const {
       ID_Cliente,
       Nombre,
@@ -53,50 +57,56 @@ const clienteController = {
       Contraseña,
     } = req.body;
 
-    try {
-      await db.query(
-        "INSERT INTO cliente (ID_Cliente, Nombre, Apellido, Correo_electronico, Telefono, Contraseña) VALUES (?, ?, ?, ?, ?, ?)",
-        [ID_Cliente, Nombre, Apellido, Correo_electronico, Telefono, Contraseña]
-      );
+    const query = "INSERT INTO cliente VALUES (?,?,?,?,?,?)";
 
-      res.status(201).json({ Exito: "Usuario Creado" });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ Error: "Error en el servidor" });
-    }
+    clientes.query(
+      query,
+      [ID_Cliente, Nombre, Apellido, Correo_electronico, Telefono, Contraseña],
+      (err, rows) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json({ Error: "Error en el servidor" });
+        } else {
+          res.status(201).json({ Exito: "Usuario Creado" });
+        }
+      }
+    );
   },
 
-  // 🔹 Obtener todos los clientes
-  getClientes: async (req, res) => {
-    try {
-      const [rows] = await db.query("SELECT * FROM cliente");
-      res.status(200).json(rows);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ Error: "Error en el servidor" });
-    }
+  getClientes: (req, res) => {
+    const query = "SELECT * FROM cliente";
+
+    admin.query(query, (err, rows) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ Error: "Error en el servidor" });
+      } else {
+        res.status(200).json(rows);
+      }
+    });
   },
 
-  // 🔹 Obtener cliente por ID
-  getClientesId: async (req, res) => {
+  getClientesId: (req, res) => {
     const { ID_Cliente } = req.params;
 
-    try {
-      const [rows] = await db.query(
-        "SELECT * FROM cliente WHERE ID_Cliente = ?",
-        [ID_Cliente]
-      );
+    console.log(ID_Cliente);
 
-      if (rows.length > 0) {
-        res.status(200).json(rows);
+    const query = "SELECT * FROM Cliente WHERE ID_Cliente = ?";
+
+    admin.query(query, [ID_Cliente], (err, rows) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ Error: "Error en el servidor" });
       } else {
-        res.status(400).json({ "No encontrado": "El usuario no existe" });
+        console.log(rows);
+        if (rows.length > 0) {
+          res.status(200).json(rows);
+        } else {
+          res.status(400).json({ "No encontrado": "El usuario no existe" });
+        }
       }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ Error: "Error en el servidor" });
-    }
+    });
   },
 };
 
-module.exports = clienteController;
+exports.default = clienteController;

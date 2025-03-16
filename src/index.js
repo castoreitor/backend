@@ -1,14 +1,30 @@
 const express = require("express");
 const cors = require("cors");
-const clienteRoutes = require("./routes/routesClientes.js");
+const connection = require("./model/db.js");
+const routeCliente = require("./routes/routesClientes.js").default;
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+class Server {
+  constructor() {
+    this.app = express();
+    this.app.set("port", 4077);
+    this.app.use(express.json());
+    this.app.use(cors());
 
-app.use("/api", clienteRoutes); // Asegúrate que el prefijo es correcto
+    this.app.get("/", (req, res) => {
+      res.status(200).json({ correcto: "Conectado" });
+    });
+    this.app.use(new routeCliente().ruta);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en el puerto ${PORT}`);
-});
+    this.app.listen(4077, () => {
+      console.log("Corriendo en puerto " + 4077);
+    });
+
+    this.connectionBd();
+  }
+
+  async connectionBd() {
+    await connection;
+  }
+}
+
+const run = new Server();
