@@ -1,6 +1,6 @@
-const connection = require("../model/db");
+const connection = require("../model/db.js");
 
-const clientes = require("../model/db");
+const clientes = require("../model/db.js");
 
 const clienteController = {
   login: (req, res) => {
