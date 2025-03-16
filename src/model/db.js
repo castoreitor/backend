@@ -24,14 +24,20 @@ module.exports = connection;
 const mysql = require("mysql2");
 require("dotenv").config();
 
-const connection = mysql.createConnection(process.env.MYSQL_URL);
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST, // Asegúrate de que esta variable es correcta
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306, // Usa el puerto 3306 por defecto
+});
 
 connection.connect((err) => {
   if (err) {
     console.error("Error de conexión a la base de datos:", err);
-  } else {
-    console.log("Conectado a la base de datos en Railway.");
+    return;
   }
+  console.log("Conexión exitosa a la base de datos");
 });
 
 module.exports = connection;
