@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const connection = require("./model/db");
-const routeCliente = require("./routes/routesClientes").default;
+const connection = require("./model/db.js");
+const routeCliente = require("./routes/routesClientes.js").default;
 
 class Server {
   constructor() {

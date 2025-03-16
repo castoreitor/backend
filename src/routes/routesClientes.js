@@ -1,7 +1,7 @@
 const express = require("express");
 
-const clienteController = require("../controllers/clientes").default;
-const productoController = require("../controllers/producto").default;
+const clienteController = require("../controllers/clientes.js").default;
+const productoController = require("../controllers/producto.js").default;
 
 class routeCliente {
   constructor() {
