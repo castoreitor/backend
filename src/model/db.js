@@ -21,18 +21,18 @@ module.exports = connection;
 
 */
 
+require("dotenv").config(); // Esto debe estar al inicio del archivo
 const mysql = require("mysql2");
-require("dotenv").config();
+
+console.log("DB_HOST:", process.env.DB_HOST); // Prueba si está cargando la variable
 
 const connection = mysql.createConnection({
-  host: process.env.DB_HOST, // Asegurar que no use localhost
+  host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT || 3306,
-  ssl: {
-    rejectUnauthorized: true, // Usar SSL en Railway
-  },
+  ssl: { rejectUnauthorized: true }, // Si Railway requiere SSL
 });
 
 connection.connect((err) => {
@@ -42,5 +42,3 @@ connection.connect((err) => {
   }
   console.log("✅ Conexión exitosa a la base de datos en Railway");
 });
-
-module.exports = connection;
