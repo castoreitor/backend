@@ -1,3 +1,5 @@
+const connection = require("../model/db");
+
 const clientes = require("../model/db");
 
 const clienteController = {

@@ -1,3 +1,6 @@
+const connection = require("../model/db");
+
+// ...resto del código...
 const database = require("../model/db");
 
 const productoController = {
