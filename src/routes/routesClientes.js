@@ -1,9 +1,8 @@
 const express = require("express");
+const clienteController = require("../controllers/clientes.js");
+const productoController = require("../controllers/producto.js");
 
-const clienteController = require("../controllers/clientes.js").default;
-const productoController = require("../controllers/producto.js").default;
-
-class routeCliente {
+class RouteCliente {
   constructor() {
     this.ruta = express.Router();
     this.config();
@@ -20,4 +19,4 @@ class routeCliente {
   }
 }
 
-exports.default = routeCliente;
+module.exports = new RouteCliente().ruta;
