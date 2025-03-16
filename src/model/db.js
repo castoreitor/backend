@@ -11,7 +11,6 @@ const connection = mysql.createConnection({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_NAME,
   port: process.env.MYSQL_PORT || 3306,
-  connectTimeout: 20000,
   ssl: { rejectUnauthorized: false }, // 👈 Desactiva la validación del certificado
 });
 
